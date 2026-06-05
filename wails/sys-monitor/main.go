@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"embed"
+	"sys-monitor/pkg/sys"
 
 	"github.com/labstack/gommon/log"
 	"github.com/wailsapp/wails/v2"
@@ -17,6 +18,9 @@ func main() {
 	// Create an instance of the app structure
 	app := NewApp()
 
+	// Create system stats struct
+	stats := sys.NewStats()
+
 	// Create application with options
 	err := wails.Run(&options.App{
 		Title:  "sys-monitor",
@@ -29,10 +33,16 @@ func main() {
 		/**
 		 * Just before the frontend is about to load index.html, a callback is made to the function provided in OnStartup. A standard Go context is passed to this method. This context is required when calling the runtime so a standard pattern is to save a reference to in this method. Just before the application shuts down, the OnShutdown callback is called in the same way, again with the context. There is also an OnDomReady callback for when the frontend has completed loading all assets in index.html and is equivalent of the body onload event in JavaScript. It is also possible to hook into the window close (or application quit) event by setting the option OnBeforeClose.
 		 */
-		OnStartup:     app.startup,
+		OnStartup: func(ctx context.Context) {
+			app.startup(ctx)
+			stats.Startup(ctx)
+		},
 		OnDomReady:    onDomReady,
 		OnBeforeClose: onBeforeClose,
-		OnShutdown:    onShutdown,
+		OnShutdown: func(ctx context.Context) {
+			stats.Shutdown(ctx)
+			onShutdown(ctx)
+		},
 
 		/**
 				 * The Bind option is one of the most important options in a Wails application. It specifies which struct methods to expose to the frontend. Think of structs like "controllers" in a traditional web application. When the application starts, it examines the struct instances listed in the Bind field in the options, determines which methods are public (starts with an uppercase letter) and will generate JavaScript versions of those methods that can be called by the frontend code.
@@ -41,6 +51,7 @@ func main() {
 		*/
 		Bind: []interface{}{
 			app,
+			stats,
 		},
 		EnumBind: []interface{}{
 			AllWeekdays,

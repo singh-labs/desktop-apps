@@ -15,6 +15,16 @@
   background-origin: content-box;
 }
 
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & > * {
+    flex: 1;
+  }
+}
+
 .result {
   height: 20px;
   line-height: 20px;
@@ -59,12 +69,20 @@
   background-color: rgba(255, 255, 255, 1);
 }
 
+.json-result {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  margin: 20px;
+}
+
 .code-block {
-  width: 400px;
-  margin: 10px auto;
+  max-width: 400px;
+  margin: 10px;
   text-align: left;
   background-color: rgba(2, 69, 112, 1);
   padding: 20px;
-  margin: 20px;
   border-radius: 3px;
 }

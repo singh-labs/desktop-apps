@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
+import { Greet, GetPerson, UpdateLoginCount } from "../wailsjs/go/main/App";
+import { main } from "../wailsjs/go/models";
+
+import { Sys } from "./Sys";
+
 import logo from "./assets/images/logo-universal.png";
 import "./App.css";
-import { Greet, GetPerson, UpdateLoginCount } from "../wailsjs/go/main/App";
-
-import { main } from "../wailsjs/go/models";
 
 type Person = main.Person | null;
 // OR
@@ -53,43 +55,51 @@ function App() {
         id="logo"
         alt="logo"
       />
-      <div
-        id="result"
-        className="result"
-      >
-        {resultText}
-      </div>
-      <div
-        id="input"
-        className="input-box"
-      >
-        <input
-          id="name"
-          className="input"
-          onChange={updateName}
-          autoComplete="off"
-          name="input"
-          type="text"
-        />
-        <button
-          className="btn"
-          onClick={greet}
-        >
-          Greet
-        </button>
-      </div>
 
-      <div id="input">
-        <div className="code-block">
-          <code>{JSON.stringify(person, null, 2)}</code>
+      <div className="container">
+        <div
+          id="input"
+          className="input-box"
+        >
+          <h3>Simple log</h3>
+          <div
+            id="result"
+            className="result"
+          >
+            {resultText}
+          </div>
+          <input
+            id="name"
+            className="input"
+            onChange={updateName}
+            autoComplete="off"
+            name="input"
+            type="text"
+          />
+          <button
+            className="btn"
+            onClick={greet}
+          >
+            Greet
+          </button>
         </div>
 
-        <button
-          className="btn"
-          onClick={updateLoginCount}
-        >
-          Update login count - (Backend)
-        </button>
+        <div className="json-result">
+          <h3>GO {"<->"} JavaScript</h3>
+          <div className="code-block">
+            <code>{JSON.stringify(person, null, 2)}</code>
+          </div>
+
+          <button
+            className="btn"
+            onClick={updateLoginCount}
+          >
+            Update login count - (Backend)
+          </button>
+        </div>
+        <div>
+          <Sys />
+        </div>
       </div>
     </div>
   );

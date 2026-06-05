@@ -62,3 +62,20 @@ export namespace main {
 
 }
 
+export namespace sys {
+	
+	export class CPUUsage {
+	    average: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new CPUUsage(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.average = source["average"];
+	    }
+	}
+
+}
+
