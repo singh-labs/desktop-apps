@@ -1,13 +1,30 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import logo from "./assets/images/logo-universal.png";
 import "./App.css";
-import { Greet, LogConsoleInfo } from "../wailsjs/go/main/App";
+import { Greet, GetPerson, UpdateLoginCount } from "../wailsjs/go/main/App";
+
+import { main } from "../wailsjs/go/models";
+
+type Person = main.Person | null;
+// OR
+// type Person = Awaited<ReturnType<typeof GetPerson>> | null;
 
 function App() {
   const [resultText, setResultText] = useState("Please enter your name below 👇");
   const [name, setName] = useState("");
+  const [person, setPerson] = useState<Person | null>(null);
+
   const updateName = (e: any) => setName(e.target.value);
   const updateResultText = (result: string) => setResultText(result);
+
+  // initialise person state by calling GetPerson on component mount
+  useEffect(() => {
+    // OR
+    // let person = new main.Person();
+    GetPerson().then((result) => {
+      setPerson(result);
+    });
+  }, []);
 
   function greet() {
     /**
@@ -17,7 +34,17 @@ function App() {
     Greet(name).then(updateResultText);
   }
 
-  LogConsoleInfo("App component rendered 🙂!");
+  // LogConsoleInfo("App component rendered 🙂!");
+
+  function updateLoginCount() {
+    if (!person) {
+      return;
+    }
+    // UpdateLoginCount accepts a Person struct, updates the login count and returns the updated struct back to the frontend. This is an example of how you can work with complex data types in your Go calls. You can pass structs, slices, maps etc. to and from your Go calls and they will be correctly translated to their JavaScript equivalents.
+    UpdateLoginCount(person).then((result) => {
+      setPerson(result);
+    });
+  }
 
   return (
     <div id="App">
@@ -49,6 +76,19 @@ function App() {
           onClick={greet}
         >
           Greet
+        </button>
+      </div>
+
+      <div id="input">
+        <div className="code-block">
+          <code>{JSON.stringify(person, null, 2)}</code>
+        </div>
+
+        <button
+          className="btn"
+          onClick={updateLoginCount}
+        >
+          Update login count - (Backend)
         </button>
       </div>
     </div>

@@ -25,3 +25,8 @@ This makes it incredibly simple to call Go code from the frontend, using the sam
 ## Building
 
 To build a redistributable, production mode package, use `wails build`.
+
+## Important Links 
+
+1. https://wails.io/docs/next/howdoesitwork - How Wails works
+2. https://wails.io/docs/next/guides/application-development - Application development guide
